@@ -7,6 +7,6 @@
     "\\src\\routes",
     "\\src\\services"
   ],
-  "SelectedNode": "\\src\\controllers\\actuatorController.js",
+  "SelectedNode": "\\src\\services\\controlService.js",
   "PreviewInSolutionExplorer": false
 }

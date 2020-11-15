@@ -23,6 +23,8 @@ const pid = {
     start_time: 0,
 }
 
+const interpolation = (x0, x1, y0, y1, x) => y0 + ((y1 - y0) / (x1 - x0)) * (x - x0)
+
 const loop = () => {
     pid.direct.setMode('auto')
     pid.reverse.setMode('auto')
@@ -57,7 +59,9 @@ const loop = () => {
 
         let forward = Math.min(pid.direct.getOutput(), control_speed)
         let reverse = Math.min(pid.reverse.getOutput(), control_speed)
-        // fazer interpolação
+
+        forward = interpolation(0, 255, 0.2, 0.8, forward) * 255
+        reverse = interpolation(0, 255, 0.2, 0.8, reverse) * 255
 
         console.log(`PID  enb: ${pid.enabled ? 1 : 0}  pos_obj: ${pid.setPoint}  spe_obj: ${pid.speed} acc_obj: ${pid.acceleration}  slo_obj: ${pid.slowdown}  pos_in: ${pid.feedback}  fwd_out: ${forward}  rev_out: ${reverse}`)
 
