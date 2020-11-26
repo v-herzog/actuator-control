@@ -4,7 +4,7 @@ const analogService = require('../services/analogService')
 const pwmService = require('../services/pwmService')
 
 const
-    Kp = 100,
+    Kp = 50,
     Ki = 0,
     Kd = 0
 
@@ -14,7 +14,7 @@ const pid = {
     setPoint: 0,
     speed: 0,
     feedback: 0,
-    delay: 100,
+    delay: 10,
     enabled: 0,
     acceleration: 0,
     slowdown: 0,
@@ -29,7 +29,7 @@ const loop = () => {
     pid.direct.setMode('auto')
     pid.reverse.setMode('auto')
 
-    //pwmService.set(2, 255) // Válvula de pressão
+    //pwmService.set(2, 255) // Valvula de pressao
 
     setInterval(() => {
         let newReading = analogService.getLast(0)
@@ -44,30 +44,30 @@ const loop = () => {
 
         let control_speed = pid.speed
 
-        // Cálculo velocidade em aceleração
-        let diff_time = (Date.now() - pid.start_time) / pid.acceleration
-        let accel_speed = diff_time * pid.speed
+        // Calculo velocidade em aceleracao
+        //let diff_time = (Date.now() - pid.start_time) / pid.acceleration
+        //let accel_speed = diff_time * pid.speed
 
-        if (diff_time > 0 && diff_time < 1) control_speed = accel_speed
+        //if (diff_time > 0 && diff_time < 1) control_speed = accel_speed
 
-        // Cálculo velocidade em desaceleração
-        let time_until_stop = (newReading - pid.setPoint) / pid.speed * 1000
-        diff_time = time_until_stop / pid.slowdown
-        let slwdwn_speed = diff_time * pid.speed
+        // Calculo velocidade em desaceleracao
+        //let time_until_stop = (newReading - pid.setPoint) / pid.speed * 1000
+        //diff_time = time_until_stop / pid.slowdown
+        //let slwdwn_speed = diff_time * pid.speed
 
-        if (diff_time > 0 && diff_time < 1) control_speed = slwdwn_speed
+        //if (diff_time > 0 && diff_time < 1) control_speed = slwdwn_speed
 
         let forward = Math.min(pid.direct.getOutput(), control_speed)
         let reverse = Math.min(pid.reverse.getOutput(), control_speed)
 
-        forward = interpolation(0, 255, 0.2, 0.8, forward) * 255
-        reverse = interpolation(0, 255, 0.2, 0.8, reverse) * 255
+        forward = interpolation(0, 255, 0.3, 1, forward) * 255
+        reverse = interpolation(0, 255, 0.3, 1, reverse) * 255
 
         console.log(`PID  enb: ${pid.enabled ? 1 : 0}  pos_obj: ${pid.setPoint}  spe_obj: ${pid.speed} acc_obj: ${pid.acceleration}  slo_obj: ${pid.slowdown}  pos_in: ${pid.feedback}  fwd_out: ${forward}  rev_out: ${reverse}`)
 
         if (pid.enabled) {
-            //pwmService.set(0, forward)
-            //pwmService.set(1, reverse)
+            pwmService.set(0, forward)
+            pwmService.set(1, reverse)
         }
 
         pid.feedback = newReading
