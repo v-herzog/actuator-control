@@ -17,6 +17,9 @@ A0.on("data", () => add(0, A0))
 A1.on("data", () => add(1, A1))
 A2.on("data", () => add(2, A2))
 
-exports.getLast = (pin) => values[pin][values[pin].length-1].value
+exports.getLast = (pin) => {
+	if(values[pin][values[pin].length-1])
+		return values[pin][values[pin].length-1].value
+}
 
 exports.getSince = (pin, time) => values[pin].filter(e => e.timestamp > time)

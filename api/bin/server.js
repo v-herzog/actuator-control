@@ -1,5 +1,5 @@
 const { Board } = require('johnny-five')
-const board = new Board({ port: 'COM5' })
+const board = new Board({ port: 'COM4' })
 
 function normalizaPort(val) {
     const port = parseInt(val, 10)
